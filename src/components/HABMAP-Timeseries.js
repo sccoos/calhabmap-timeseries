@@ -16,8 +16,6 @@ const REGION_LABELS = {
   south: "Southern California",
 };
 
-const COLOR_PALETTE = ["#d9251d", "#f5b45a", "#9cc9e5", "#5a8f76", "#5166b4", "#d781c5", "#7d7d7d"];
-
 function formatRegionLabel(region) {
   return REGION_LABELS[region] ?? region;
 }
@@ -169,12 +167,14 @@ function HABMAPTimeseries({manifest, rows, initialDateRange = null}) {
 
   const series = useMemo(() => {
     const grouped = d3.group(enrichedRows, (row) => row.location);
-    return Array.from(grouped, ([location, values], index) => ({
+    const groupedSeries = Array.from(grouped, ([location, values], index) => ({
       location,
       siteName: values[0]?.siteName ?? location,
-      color: COLOR_PALETTE[index % COLOR_PALETTE.length],
+      color: d3.interpolateRainbow(grouped.size > 1 ? index / grouped.size : 0.5),
       values: values.slice().sort((a, b) => a.datetime - b.datetime)
-    })).sort((a, b) => d3.ascending(a.siteName, b.siteName));
+    }));
+
+    return groupedSeries.sort((a, b) => d3.ascending(a.siteName, b.siteName));
   }, [enrichedRows]);
 
   const domain = useMemo(() => {
@@ -198,7 +198,7 @@ function HABMAPTimeseries({manifest, rows, initialDateRange = null}) {
       series.flatMap((site) => [
         {
           type: "scatter",
-          mode: "lines",
+          mode: "lines+markers",
           name: site.siteName,
           legendgroup: site.location,
           x: site.values.map((point) => point.datetime.toISOString()),
@@ -206,6 +206,11 @@ function HABMAPTimeseries({manifest, rows, initialDateRange = null}) {
           line: {
             color: site.color,
             width: 4
+          },
+          marker: {
+            color: site.color,
+            size: 9,
+            opacity: 0
           },
           hoverinfo: "skip"
         },
@@ -242,6 +247,11 @@ function HABMAPTimeseries({manifest, rows, initialDateRange = null}) {
       hovermode: "x unified",
       hoverdistance: 8,
       spikedistance: -1,
+      hoverlabel: {
+        font: {
+          size: 11
+        }
+      },
       showlegend: true,
       legend: {
         orientation: "h",
