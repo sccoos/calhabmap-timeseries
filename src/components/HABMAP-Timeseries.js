@@ -247,7 +247,7 @@ function HABMAPTimeseries({manifest, rows, initialDateRange = null}) {
         orientation: "h",
         x: 0.5,
         xanchor: "center",
-        font: {size: 18, color: "#111111"}
+        font: {size: 12, color: "#111111"}
       },
       font: {
         family: '"Avenir Next", "Segoe UI", sans-serif',
@@ -259,7 +259,7 @@ function HABMAPTimeseries({manifest, rows, initialDateRange = null}) {
         automargin: true,
         showgrid: true,
         gridcolor: "#dddddd",
-        tickfont: {size: 18, color: "#4b4b4b"}
+        tickfont: {size: 15, color: "#4b4b4b"}
       },
       shapes: showPseudoNitzschiaThreshold
         ? [
