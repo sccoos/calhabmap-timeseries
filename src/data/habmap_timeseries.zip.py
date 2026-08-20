@@ -25,7 +25,7 @@ HAB_SPECIES_COLUMNS = [
 DOMOIC_ACID_COLUMNS = ["pDA"]
 
 HAB_UNIT = "cells/L"
-DOMOIC_ACID_UNIT = "ng/mL"
+DOMOIC_ACID_UNIT = "ng/L"
 
 UNIT_MAP = {
     **{column: HAB_UNIT for column in HAB_SPECIES_COLUMNS},
@@ -291,6 +291,13 @@ def parse_float(value: Any) -> float | None:
     return float(value)
 
 
+def parse_scaled_float(value: Any, scale: float) -> float | None:
+    parsed = parse_float(value)
+    if parsed is None:
+        return None
+    return parsed * scale
+
+
 def transform_site_row(row: dict[str, Any]) -> dict[str, Any]:
     dt = parse_datetime(row["time"])
     return {
@@ -305,7 +312,7 @@ def transform_site_row(row: dict[str, Any]) -> dict[str, Any]:
         "Alexandrium_spp": parse_float(row["Alexandrium_spp"]),
         "Pn_delicatissima": parse_int(row["Pseudo_nitzschia_delicatissima_group"]),
         "Pn_seriata": parse_int(row["Pseudo_nitzschia_seriata_group"]),
-        "Domoic_Acid": parse_float(row["pDA"]),
+        "Domoic_Acid": parse_scaled_float(row["pDA"], 1000),
     }
 
 

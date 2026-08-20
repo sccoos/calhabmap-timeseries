@@ -1,6 +1,6 @@
 export default {
   root: "src",
-  title: "Observable React Map Starter",
+  title: "CalHABMAP Timeseries",
   theme: ["default", "alt", "wide"],
   sidebar: false,
   header: false,

@@ -17,8 +17,10 @@ const initialDateRange =
     ? {start: rangeStart, end: rangeEnd}
     : null;
 
+document.title = "CalHABMAP Timeseries";
+
 const habmapTimeseries = renderHABMAPTimeseries({
-  title: "HABMAP Timeseries",
+  title: "CalHABMAP Timeseries",
   manifest: habmapManifest,
   rows: habmapRows,
   initialDateRange
